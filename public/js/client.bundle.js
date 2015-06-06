@@ -47,7 +47,7 @@
 	var terrain = __webpack_require__(1),
 			Keyboard = __webpack_require__(7);
 
-	var GameManager = __webpack_require__(11);
+	/*var GameManager = require('../world/managers/GameManager.js');
 	var game = new GameManager({
 		keyboard: new Keyboard(document),
 		stage: new PIXI.Container(),
@@ -59,7 +59,7 @@
 		window.requestAnimationFrame(render);
 	})();
 
-	setInterval(game.update, 16);
+	setInterval(game.update, 16);*/
 
 	var canvas = document.getElementById('terrain');
 	var base_size = Math.random() * 300;
@@ -157,7 +157,7 @@
 		map.addChild(text);
 	}
 
-	var g = __webpack_require__(12);
+	var g = __webpack_require__(11);
 	var c = g[0].search(gen_data, group_data);
 	console.log(c);
 	console.log(g);
@@ -13705,41 +13705,6 @@
 
 /***/ },
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(module) {var EventEmitter = __webpack_require__(8)
-		,	inherits = __webpack_require__(10);
-
-	var GameManager = function(options) {
-		EventEmitter.call(this);
-		this._members = {};
-		this._member_ids = []; // index for quicker update and draw executions
-		this._id_counter = 0; // used for id assignment
-		this.context = options || {};
-	};
-
-	inherits(ClientGameManager, EventEmitter);
-
-	GameManager.prototype.add = function(object) {
-		if(!(object instanceof EventEmitter)) return new Error('Object is not an EventEmitter');
-		var new_id = this._id_counter;
-		this._members
-		object.initialize(new_id);
-
-		// recalculate member id index
-		this.member_ids = Object.keys(this._members);
-		this._id_counter ++;
-	};
-
-	GameManager.prototype.draw = function() {
-		
-	};
-
-	module.esports = GameManager;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module)))
-
-/***/ },
-/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(2);

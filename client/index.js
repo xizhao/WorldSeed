@@ -1,7 +1,7 @@
 var terrain = require('../world/maps/terrain.js'),
 		Keyboard = require('./input/keyboard.js');
 
-var GameManager = require('../world/managers/GameManager.js');
+/*var GameManager = require('../world/managers/GameManager.js');
 var game = new GameManager({
 	keyboard: new Keyboard(document),
 	stage: new PIXI.Container(),
@@ -13,7 +13,7 @@ var game = new GameManager({
 	window.requestAnimationFrame(render);
 })();
 
-setInterval(game.update, 16);
+setInterval(game.update, 16);*/
 
 var canvas = document.getElementById('terrain');
 var base_size = Math.random() * 300;
