@@ -1,5 +1,5 @@
 {
-  "name": "World Seed",
+  "name": "WorldSeed",
   "version": "1.0.0",
   "description": "",
   "main": "Gruntfile.js",
@@ -24,6 +24,7 @@
   "dependencies": {
     "alea": "0.0.9",
     "eventemitter2": "^0.4.14",
+    "express": "^4.12.4",
     "inherits": "^2.0.1",
     "keycode": "^2.1.0",
     "lodash": "^3.9.3",

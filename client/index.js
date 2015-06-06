@@ -1,6 +1,20 @@
 var terrain = require('../world/maps/terrain.js'),
 		Keyboard = require('./input/keyboard.js');
 
+var GameManager = require('../world/managers/GameManager.js');
+var game = new GameManager({
+	keyboard: new Keyboard(document),
+	stage: new PIXI.Container(),
+	renderer: PIXI.autoDetectRenderer(window.outerWidth, window.outerHeight)
+});
+
+(function render() {
+	game.draw();
+	window.requestAnimationFrame(render);
+})();
+
+setInterval(game.update, 16);
+
 var canvas = document.getElementById('terrain');
 var base_size = Math.random() * 300;
 var map_size = {
@@ -17,9 +31,8 @@ var image = ctx.createImageData(canvas.width, canvas.height);
 var data = image.data;
 
 var gen_data = terrain.generate({
-		width: map_size.width,
-		height: map_size.height,
-
+	width: map_size.width,
+	height: map_size.height
 });
 
 var map_data = gen_data.data;
@@ -32,6 +45,7 @@ var map = new PIXI.Container();
 stage.addChild(map);
 
 var tileset = new PIXI.Texture.fromImage("./img/tileset.png");
+var totem = new PIXI.Texture.fromImage("./img/totem.png");
 
 for(var xx = 0; xx < map_data.length; xx++) {
 	for(var yy = 0; yy < map_data[xx].length; yy++) {
@@ -97,6 +111,17 @@ for(var i=0; i<group_data.rooms.length; i++) {
 	map.addChild(text);
 }
 
+var g = require('../world/maps/generators');
+var c = g[0].search(gen_data, group_data);
+console.log(c);
+console.log(g);
+for(var i=0; i<c.length; i++) {
+	var sprite = new PIXI.Sprite(totem);
+	sprite.position.x = c[i].x * TILE_SIZE;
+	sprite.position.y = c[i].y * TILE_SIZE;
+	map.addChild(sprite);
+}
+
 ctx.mozImageSmoothingEnabled = false;
 ctx.webkitImageSmoothingEnabled = false;
 ctx.msImageSmoothingEnabled = false;
@@ -108,15 +133,17 @@ var keyboard = new Keyboard(document);
 map.x -= map.width/2;
 map.y -= map.height/2;
 
+
+
 function render() {
 	if(keyboard.isKeyDown('left'))
-		map.x += 6;
+		map.x += 10;
 	if(keyboard.isKeyDown('right'))
-		map.x -= 6;
+		map.x -= 10;
 	if(keyboard.isKeyDown('up'))
-		map.y += 6;
+		map.y += 10;
 	if(keyboard.isKeyDown('down'))
-		map.y -= 6;
+		map.y -= 10;
 	//map.pivot = new PIXI.Point(map.x * -1 + (canvas.width / 2), map.y * -1 + (canvas.height/2));
 	if(keyboard.isKeyDown('q')) {
 		map.scale.x -= .003;

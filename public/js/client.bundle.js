@@ -47,6 +47,20 @@
 	var terrain = __webpack_require__(1),
 			Keyboard = __webpack_require__(7);
 
+	var GameManager = __webpack_require__(11);
+	var game = new GameManager({
+		keyboard: new Keyboard(document),
+		stage: new PIXI.Container(),
+		renderer: PIXI.autoDetectRenderer(window.outerWidth, window.outerHeight)
+	});
+
+	(function render() {
+		game.draw();
+		window.requestAnimationFrame(render);
+	})();
+
+	setInterval(game.update, 16);
+
 	var canvas = document.getElementById('terrain');
 	var base_size = Math.random() * 300;
 	var map_size = {
@@ -63,9 +77,8 @@
 	var data = image.data;
 
 	var gen_data = terrain.generate({
-			width: map_size.width,
-			height: map_size.height,
-
+		width: map_size.width,
+		height: map_size.height
 	});
 
 	var map_data = gen_data.data;
@@ -78,6 +91,7 @@
 	stage.addChild(map);
 
 	var tileset = new PIXI.Texture.fromImage("./img/tileset.png");
+	var totem = new PIXI.Texture.fromImage("./img/totem.png");
 
 	for(var xx = 0; xx < map_data.length; xx++) {
 		for(var yy = 0; yy < map_data[xx].length; yy++) {
@@ -143,6 +157,17 @@
 		map.addChild(text);
 	}
 
+	var g = __webpack_require__(12);
+	var c = g[0].search(gen_data, group_data);
+	console.log(c);
+	console.log(g);
+	for(var i=0; i<c.length; i++) {
+		var sprite = new PIXI.Sprite(totem);
+		sprite.position.x = c[i].x * TILE_SIZE;
+		sprite.position.y = c[i].y * TILE_SIZE;
+		map.addChild(sprite);
+	}
+
 	ctx.mozImageSmoothingEnabled = false;
 	ctx.webkitImageSmoothingEnabled = false;
 	ctx.msImageSmoothingEnabled = false;
@@ -154,15 +179,17 @@
 	map.x -= map.width/2;
 	map.y -= map.height/2;
 
+
+
 	function render() {
 		if(keyboard.isKeyDown('left'))
-			map.x += 6;
+			map.x += 10;
 		if(keyboard.isKeyDown('right'))
-			map.x -= 6;
+			map.x -= 10;
 		if(keyboard.isKeyDown('up'))
-			map.y += 6;
+			map.y += 10;
 		if(keyboard.isKeyDown('down'))
-			map.y -= 6;
+			map.y -= 10;
 		//map.pivot = new PIXI.Point(map.x * -1 + (canvas.width / 2), map.y * -1 + (canvas.height/2));
 		if(keyboard.isKeyDown('q')) {
 			map.scale.x -= .003;
@@ -13675,6 +13702,68 @@
 	  }
 	}
 
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {var EventEmitter = __webpack_require__(8)
+		,	inherits = __webpack_require__(10);
+
+	var GameManager = function(options) {
+		EventEmitter.call(this);
+		this._members = {};
+		this._member_ids = []; // index for quicker update and draw executions
+		this._id_counter = 0; // used for id assignment
+		this.context = options || {};
+	};
+
+	inherits(ClientGameManager, EventEmitter);
+
+	GameManager.prototype.add = function(object) {
+		if(!(object instanceof EventEmitter)) return new Error('Object is not an EventEmitter');
+		var new_id = this._id_counter;
+		this._members
+		object.initialize(new_id);
+
+		// recalculate member id index
+		this.member_ids = Object.keys(this._members);
+		this._id_counter ++;
+	};
+
+	GameManager.prototype.draw = function() {
+		
+	};
+
+	module.esports = GameManager;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)(module)))
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(2);
+	module.exports = [{
+		name: 'totem',
+		search: function(map, clusters) {
+			var candidates = [];
+			//look for a 1x2 block where island width < 3
+			for(var i=0; i<clusters.islands.length; i++) {
+				var island = clusters.islands[i];
+				if(island.x2 - island.x > 2) continue;
+				for(var q=0; q<island.tiles.length; q++) {
+					if(map.data[island.tiles[q].x][island.tiles[q].y - 1] || map.data[island.tiles[q].x][island.tiles[q].y - 2]) continue;
+					if(Math.random() > .35) continue;
+					candidates.push({
+						x: island.tiles[q].x,
+						y: island.tiles[q].y - 2
+					});
+					break;
+				};
+			}
+			return candidates;
+		}
+	}];
 
 /***/ }
 /******/ ]);

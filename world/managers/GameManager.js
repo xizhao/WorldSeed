@@ -1,12 +1,12 @@
 var EventEmitter = require('eventemitter2')
 	,	inherits = require('inherits');
 
-var GameManager = function() {
+var GameManager = function(options) {
 	EventEmitter.call(this);
 	this._members = {};
 	this._member_ids = []; // index for quicker update and draw executions
 	this._id_counter = 0; // used for id assignment
-	this.context = {};
+	this.context = options || {};
 };
 
 inherits(ClientGameManager, EventEmitter);
@@ -23,7 +23,7 @@ GameManager.prototype.add = function(object) {
 };
 
 GameManager.prototype.draw = function() {
-	f
+	
 };
 
-return GameManager;
+module.esports = GameManager;
